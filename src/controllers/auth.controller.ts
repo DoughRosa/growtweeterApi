@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import db from "../database/prisma.connection";
 import bcrypt from "bcrypt";
+<<<<<<< HEAD
 import { v4 as uuid } from "uuid";
+=======
+>>>>>>> feature/add-middleware
 import * as jwt from "jsonwebtoken";
 
 class AuthController {
