@@ -1,22 +1,23 @@
 import { NextFunction, Request, Response } from "express";
-import db from '../database/prisma.connection';
+import * as jwt from "jsonwebtoken";
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction){
     
     const authHeader = req.headers.authorization;
 
-    if(authHeader){
-        const user = await db.users.findFirst({
-            where: {
-                token: authHeader
-            }
-        });
-
-        if(user){
-            return next();
+    if (authHeader) {
+        let decoded;
+    
+        try {
+          decoded = jwt.verify(authHeader, process.env.JWT_SECRET || "");
+        } catch (error) {
+          return res.status(401).json({msg: "Token inválido"});
         }
+    
+        return next();
+      }
+    
+      return res.status(401).json({success: false, msg: "user not logged."});
     }
-    return res.status(400).json({ success: false, msg: "User not logged."});
-}
 
 export default authMiddleware;
