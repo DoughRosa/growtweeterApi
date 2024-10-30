@@ -6,9 +6,10 @@ import * as jwt from "jsonwebtoken";
 class AuthController {
   public async store(req: Request, res: Response) {
     const { email, password } = req.body;
-
+    
     if (!email || !password) {
       return res.status(400).json({ success: false, msg: "Please fill the requires fields." });
+
     }
 
     try {
