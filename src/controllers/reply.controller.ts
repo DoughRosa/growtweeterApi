@@ -107,7 +107,7 @@ class ReplyController {
       }
 
       if (content) {
-        await db.tweets.update({
+        await db.replies.update({
           where: {
             id,
           },
@@ -136,7 +136,7 @@ class ReplyController {
       });
 
       if (reply) {
-        await db.tweets.delete({
+        await db.replies.delete({
           where: { id },
         });
         return res.status(200).json({
