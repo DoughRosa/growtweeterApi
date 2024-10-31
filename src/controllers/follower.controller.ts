@@ -60,7 +60,7 @@ class FollowerController {
         },
       });
 
-      return res.status(200).json({ success: true, msg: "You Are Now Following This User" });
+      return res.status(200).json({ success: true, data: { id: followed.id }, msg: "You Are Now Following This User" });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
     }
