@@ -3,8 +3,10 @@ import db from "../database/prisma.connection";
 
 class TweetController {
   public async create(req: Request, res: Response) {
-    const token = req.headers.authorization;
+    const { authorization } = req.headers;
     const { content } = req.body;
+
+    const token = authorization?.split(" ")[1];
 
     if (!content) {
       return res.status(400).json({ success: true, msg: "Content Required" });

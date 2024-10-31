@@ -2,14 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction){
-    
-    const authHeader = req.headers.authorization;
 
-    if (authHeader) {
+    const { authorization } = req.headers;
+    const token = authorization?.split(" ")[1];
+    
+
+    if (token) {
         let decoded;
     
         try {
-          decoded = jwt.verify(authHeader, process.env.JWT_SECRET || "");
+          decoded = jwt.verify(token, process.env.JWT_SECRET || "");
         } catch (error) {
           return res.status(401).json({msg: "Token inválido"});
         }

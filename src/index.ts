@@ -25,3 +25,5 @@ app.use('/users', userRoutes());
 app.use('/auth', authRoutes());
 app.use('/tweet', tweetRoutes());
 app.use('/like', likeRoutes());
+
+export default app
