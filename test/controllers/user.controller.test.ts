@@ -111,6 +111,24 @@ describe("Testes do user controller", () => {
     expect(response.body).toHaveProperty("data");
   });
 
+  test("Deveria retornar um 404 ao buscar um usuário por um id inexistente", async () => {
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: dataUser.email, password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
+
+    const response = await request(app)
+      .get(`/users/0fa82d40-bab7-4000-8f27-abd706cb2415`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(response.status).toEqual(404);
+  });
+
   test("Deveria retornar um 404 ao tentar atualizar um usuário que não existe", async () => {
     const requestLogin = await request(app)
       .post("/auth")
@@ -121,7 +139,7 @@ describe("Testes do user controller", () => {
     const token = requestLogin.body.data.token;
 
     const response = await request(app)
-      .post(`/users/${userId}`)
+      .put(`/users/0fa82d40-bab7-4000-8f27-abd706cb2415`)
       .send({name: "aijdiosja", password: "aodjoisjd", username: "diaojsdiosj"})
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
@@ -150,26 +168,92 @@ describe("Testes do user controller", () => {
   });
 
   test("Deveria apagar um usuário ao passar o id de um usuário existente no metodo delete do /users", async () => {
+    const user = await request(app)
+      .post("/users")
+      .send({email: "deleteusertest", password: hash, name: dataUser.name, username: dataUser.username})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const userDeleteId = user.body.data.id;
+
     const requestLogin = await request(app)
       .post("/auth")
-      .send({email: dataUser.email, password: hash})
+      .send({email: "deleteusertest", password: hash})
       .set("Content-Type", "application/json")
       .set("Accept", "application/json");
 
     const token = requestLogin.body.data.token;
 
-    const response = await request(app)
-      .get(`/users/${userId}`)
+    const deleteUser = await request(app)
+      .delete(`/users/${userDeleteId}`)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .set("Authorization", `bearer ${token}`);
+
+    expect(deleteUser.status).toEqual(200);
+  });
+
+  test("Deveria retornar um 404 ao tentar apagar um usuário que não existe", async () => {
+    const user = await request(app)
+      .post("/users")
+      .send({email: "deleteusertest", password: hash, name: dataUser.name, username: dataUser.username})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const userDeleteId = user.body.data.id;
+
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: "deleteusertest", password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
 
     const deleteUser = await request(app)
-      .delete(`/users/${userId}`)
+      .delete(`/users/0fa82d40-bab7-4000-8f27-abd706cb2415`)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .set("Authorization", `bearer ${token}`);
 
-    expect(deleteUser).toHaveProperty("id");
+    expect(deleteUser.status).toEqual(404);
+
+    await db.users.deleteMany({
+      where: {
+        id: userDeleteId,
+      },
+    });
+  });
+
+  test("Deveria retornar 500 ao tentar apagar um usuário com parâmetros inválidos", async () => {
+    const user = await request(app)
+      .post("/users")
+      .send({email: "deleteusertest", password: hash, name: dataUser.name, username: dataUser.username})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const userDeleteId = user.body.data.id;
+
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: "deleteusertest", password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
+
+    const deleteUser = await request(app)
+      .delete(`/users/${userDeleteId}` + "456")
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(deleteUser.status).toEqual(500);
+
+    await db.users.deleteMany({
+      where: {
+        id: userDeleteId,
+      },
+    });
   });
 });
