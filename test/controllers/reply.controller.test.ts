@@ -254,8 +254,6 @@ describe("este teste do reply controller", () => {
 
     expect(response.status).toEqual(200);
 
-    console.log(response.body);
-
     const responseTweet = await db.replies.delete({
       where: {
         id: responseCreateReply.body.data.id,
