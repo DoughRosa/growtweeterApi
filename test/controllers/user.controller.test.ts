@@ -1,4 +1,4 @@
-import app from "../../src/index";
+import app from "../../src/app";
 import request from "supertest";
 import db from "../../src/database/prisma.connection";
 import generateHash from "../../src/utils/generateHash";
@@ -109,5 +109,67 @@ describe("Testes do user controller", () => {
       .set("Authorization", `bearer ${token}`);
 
     expect(response.body).toHaveProperty("data");
+  });
+
+  test("Deveria retornar um 404 ao tentar atualizar um usuário que não existe", async () => {
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: dataUser.email, password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
+
+    const response = await request(app)
+      .post(`/users/${userId}`)
+      .send({name: "aijdiosja", password: "aodjoisjd", username: "diaojsdiosj"})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(response.status).toEqual(404);
+  });
+
+  test("Deveria retornar um 200 ao tentar atualizar um usuário existente", async () => {
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: dataUser.email, password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
+
+    const response = await request(app)
+      .put(`/users/${userId}`)
+      .send({name: "aijdiosja", password: "aodjoisjd", username: "diaojsdiosj"})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(response.status).toEqual(200);
+  });
+
+  test("Deveria apagar um usuário ao passar o id de um usuário existente no metodo delete do /users", async () => {
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: dataUser.email, password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
+
+    const response = await request(app)
+      .get(`/users/${userId}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    const deleteUser = await request(app)
+      .delete(`/users/${userId}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(deleteUser).toHaveProperty("id");
   });
 });
