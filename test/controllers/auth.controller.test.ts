@@ -11,9 +11,7 @@ describe("este teste do utils authController", () => {
   });
 
   test("deveria retornar 401 caso email ou password enviados sejam incorretos", async () => {
-    const response = await request(app)
-      .post("/auth")
-      .send({ email: "neymar@neymar.com", password: "12345" });
+    const response = await request(app).post("/auth").send({ email: "neymar@neymar.com", password: "12345" });
 
     expect(response.status).toEqual(401);
   });
@@ -30,20 +28,18 @@ describe("este teste do utils authController", () => {
       },
     });
 
-    const id = newUser.id
+    const id = newUser.id;
 
-    const response = await request(app)
-      .post("/auth")
-      .send({ email: "douglas@douglas.com", password: "1234" });
+    const response = await request(app).post("/auth").send({ email: "douglas@douglas.com", password: "1234" });
 
-      await db.users.delete({
-        where: { id },
-      });
+    await db.users.delete({
+      where: { id },
+    });
 
     expect(response.status).toEqual(200);
   });
 
-  test("deveria retornar 500 caso ocorra erro no Banco de Dados", async() => {
+  test("deveria retornar 500 caso ocorra erro no Banco de Dados", async () => {
     const response = await request(app).post("/auth").send({ email: 5, password: 5 });
 
     expect(response.status).toEqual(500);

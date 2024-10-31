@@ -1,4 +1,4 @@
-import app from "../../src";
+import app from "../../src/app";
 import request from "supertest";
 import prismaConnection from "../../src/database/prisma.connection";
 import generateHash from "../../src/utils/generateHash";
@@ -14,12 +14,10 @@ describe("Testes do Tweet controller", () => {
       },
     });
 
-    const auth = await request(app)
-      .post("/auth")
-      .send({ email: 'testeTweet@teste.com', password: "TestTweet" });
+    const auth = await request(app).post("/auth").send({ email: "testeTweet@teste.com", password: "TestTweet" });
 
     const token = auth.body.data.token;
-    
+
     const response: any = await request(app)
       .post("/tweet")
       .send({ content: "Teste de tweet" })
@@ -28,17 +26,17 @@ describe("Testes do Tweet controller", () => {
       .set("Authorization", `Bearer ${token}`);
 
     const deleteTweet = await prismaConnection.tweets.delete({
-        where:  {id: response.body.data.id}
-      });
+      where: { id: response.body.data.id },
+    });
 
     const deleteUser = await prismaConnection.users.delete({
-        where: {id: user.id}
-    })
+      where: { id: user.id },
+    });
 
-    expect(user).toHaveProperty('id');
+    expect(user).toHaveProperty("id");
     expect(auth.status).toBe(200);
     expect(response.status).toBe(200);
-    expect(deleteTweet).toHaveProperty('id');
-    expect(deleteUser).toHaveProperty('id');
+    expect(deleteTweet).toHaveProperty("id");
+    expect(deleteUser).toHaveProperty("id");
   });
 });
