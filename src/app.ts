@@ -7,6 +7,8 @@ import likeRoutes from "./routes/likes.routes";
 import repliesRoutes from "./routes/replies.routes";
 import followerRoutes from "./routes/follower.routes";
 import cors from "cors";
+import swaggerUI from "swagger-ui-express";
+import swaggerDoc from "./docs/swagger.json";
 
 dotenv.config();
 
@@ -15,6 +17,10 @@ const app = express();
 app.use(express.json());
 
 app.use(cors());
+
+app.use("/docs", swaggerUI.serve);
+
+app.get("/docs", swaggerUI.setup(swaggerDoc));
 
 app.use("/users", userRoutes());
 app.use("/auth", authRoutes());
