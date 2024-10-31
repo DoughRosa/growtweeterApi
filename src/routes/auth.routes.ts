@@ -7,6 +7,10 @@ const routes = () => {
 
     router.post('/', controller.store);
 
+    router.get('/test', (req, res)=>{
+        res.status(200).json('TESTANDO')
+    })
+
     return router;
 };
 

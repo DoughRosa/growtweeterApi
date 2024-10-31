@@ -5,7 +5,6 @@ import generateHash from "../utils/generateHash";
 class UserController {
   public async create(req: Request, res: Response) {
     const { email, name, password, username } = req.body;
-
     if (!email || !password || !name || !username) {
       return res.status(400).json({ success: true, msg: "Please, fill all the required fields" });
     }
