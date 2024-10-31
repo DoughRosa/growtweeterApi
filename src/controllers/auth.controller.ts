@@ -24,7 +24,7 @@ class AuthController {
         expiresIn: "1d",
       });
 
-      await db.users.update({
+      const userUpdate = await db.users.update({
         where: {
           email,
         },

@@ -3,7 +3,9 @@ import db from "../database/prisma.connection";
 
 class FollowerController {
   public async create(req: Request, res: Response) {
-    const token = req.headers.authorization;
+    const { authorization } = req.headers;
+
+    const token = authorization?.split(" ")[1];
     const { id } = req.body;
 
     try {
@@ -24,20 +26,18 @@ class FollowerController {
       });
 
       if (!user) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            msg: "You Have to Be Logged to Follow an User.",
-          });
-      };
+        return res.status(400).json({
+          success: false,
+          msg: "You Have to Be Logged to Follow an User.",
+        });
+      }
 
       if (user?.id === follow.id) {
         return res.status(400).json({
           success: false,
           msg: "You Can Not Follow Yourself.",
         });
-      };
+      }
 
       const alreadyFollowing = await db.followers.findFirst({
         where: {
@@ -46,12 +46,12 @@ class FollowerController {
         },
       });
 
-      if(alreadyFollowing){
+      if (alreadyFollowing) {
         return res.status(400).json({
           success: false,
           msg: "You Are Already Following This User.",
         });
-      };
+      }
 
       const followed = await db.followers.create({
         data: {
@@ -60,26 +60,20 @@ class FollowerController {
         },
       });
 
-      return res
-        .status(200)
-        .json({ success: true, msg: "You Are Now Following This User" });
+      return res.status(200).json({ success: true, msg: "You Are Now Following This User" });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
-    };
-  };
+    }
+  }
 
   public async list(req: Request, res: Response) {
     try {
       const followers = await db.followers.findMany();
-      return res
-        .status(200)
-        .json({ success: true, msg: "Followers Listed", data: followers });
+      return res.status(200).json({ success: true, msg: "Followers Listed", data: followers });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, msg: "Failed to produce a list" });
-    };
-  };
+      return res.status(500).json({ success: false, msg: "Failed to produce a list" });
+    }
+  }
 
   public async show(req: Request, res: Response) {
     const { id } = req.params;
@@ -97,7 +91,7 @@ class FollowerController {
           msg: "Follower Showed",
           data: follower,
         });
-      };
+      }
 
       return res.status(404).json({
         success: false,
@@ -105,8 +99,8 @@ class FollowerController {
       });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
-    };
-  };
+    }
+  }
 
   public async delete(req: Request, res: Response) {
     const { id } = req.params;
@@ -126,7 +120,7 @@ class FollowerController {
           success: true,
           msg: "You No Longer Follow This User",
         });
-      };
+      }
 
       return res.status(404).json({
         success: false,
@@ -134,8 +128,8 @@ class FollowerController {
       });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
-    };
-  };
-};
+    }
+  }
+}
 
 export default FollowerController;

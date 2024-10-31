@@ -3,8 +3,10 @@ import db from "../database/prisma.connection";
 
 class TweetController {
   public async create(req: Request, res: Response) {
-    const token = req.headers.authorization;
+    const { authorization } = req.headers;
     const { content } = req.body;
+
+    const token = authorization?.split(" ")[1];
 
     if (!content) {
       return res.status(400).json({ success: true, msg: "Content Required" });
@@ -40,9 +42,7 @@ class TweetController {
         });
       }
 
-      return res
-        .status(500)
-        .json({ success: false, msg: "Tweet Was NOT Created" });
+      return res.status(500).json({ success: false, msg: "Tweet Was NOT Created" });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
     }
@@ -64,13 +64,9 @@ class TweetController {
           },
         },
       });
-      return res
-        .status(200)
-        .json({ success: true, msg: "Tweets Listed", data: tweets });
+      return res.status(200).json({ success: true, msg: "Tweets Listed", data: tweets });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, msg: "Failed to produce a list" });
+      return res.status(500).json({ success: false, msg: "Failed to produce a list" });
     }
   }
 
