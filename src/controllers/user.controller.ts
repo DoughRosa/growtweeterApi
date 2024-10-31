@@ -5,11 +5,8 @@ import generateHash from "../utils/generateHash";
 class UserController {
   public async create(req: Request, res: Response) {
     const { email, name, password, username } = req.body;
-    
     if (!email || !password || !name || !username) {
-      return res
-        .status(400)
-        .json({ success: true, msg: "Please, fill all the required fields" });
+      return res.status(400).json({ success: true, msg: "Please, fill all the required fields" });
     }
 
     try {
@@ -35,14 +32,12 @@ class UserController {
             id: newUser.id,
             user: newUser.name,
             email: newUser.email,
-            username: newUser.username
+            username: newUser.username,
           },
         });
       }
 
-      return res
-        .status(500)
-        .json({ success: false, msg: "User Was NOT Created" });
+      return res.status(500).json({ success: false, msg: "User Was NOT Created" });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
     }
@@ -51,13 +46,9 @@ class UserController {
   public async list(req: Request, res: Response) {
     try {
       const users = await db.users.findMany();
-      return res
-        .status(200)
-        .json({ success: true, msg: "Users Listed", data: users });
+      return res.status(200).json({ success: true, msg: "Users Listed", data: users });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, msg: "Failed to produce a list" });
+      return res.status(500).json({ success: false, msg: "Failed to produce a list" });
     }
   }
 
@@ -114,7 +105,7 @@ class UserController {
           data: {
             name,
             password,
-            username
+            username,
           },
         });
 

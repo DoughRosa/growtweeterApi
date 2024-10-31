@@ -25,6 +25,15 @@ class AuthController {
         expiresIn: "1d",
       });
 
+      const userUpdate = await db.users.update({
+        where: {
+          email,
+        },
+        data: {
+          token,
+        },
+      });
+
       res.status(200).json({
         success: true,
         msg: "Logged Successfully",

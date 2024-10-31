@@ -3,8 +3,9 @@ import db from "../database/prisma.connection";
 
 class LikeController {
   public async create(req: Request, res: Response) {
-    const token = req.headers.authorization;
+    const { authorization } = req.headers;
     const { tweetId } = req.body;
+    const token = authorization?.split(" ")[1];
 
     try {
       const findUser = await db.users.findFirst({
@@ -55,21 +56,17 @@ class LikeController {
       });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
-    };
-  };
+    }
+  }
 
   public async list(req: Request, res: Response) {
     try {
       const likes = await db.likes.findMany();
-      return res
-        .status(200)
-        .json({ success: true, msg: "Likes Listed", data: likes });
+      return res.status(200).json({ success: true, msg: "Likes Listed", data: likes });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, msg: "Failed to produce a list" });
-    };
-  };
+      return res.status(500).json({ success: false, msg: "Failed to produce a list" });
+    }
+  }
 
   public async show(req: Request, res: Response) {
     const { id } = req.params;
@@ -87,7 +84,7 @@ class LikeController {
           msg: "Like Showed",
           data: like,
         });
-      };
+      }
 
       return res.status(404).json({
         success: false,
@@ -95,8 +92,8 @@ class LikeController {
       });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
-    };
-  };
+    }
+  }
 
   public async delete(req: Request, res: Response) {
     const { id } = req.params;
@@ -116,7 +113,7 @@ class LikeController {
           success: true,
           msg: "Like Deleted",
         });
-      };
+      }
 
       return res.status(404).json({
         success: false,
@@ -124,8 +121,8 @@ class LikeController {
       });
     } catch (error) {
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
-    };
-  };
-};
+    }
+  }
+}
 
 export default LikeController;
