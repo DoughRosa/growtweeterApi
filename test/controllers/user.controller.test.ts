@@ -148,6 +148,44 @@ describe("Testes do user controller", () => {
     expect(response.status).toEqual(404);
   });
 
+  test("Deveria retornar um 400 ao tentar atualizar um usuário com dados insuficientes", async () => {
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: dataUser.email, password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
+
+    const response = await request(app)
+      .put(`/users/${userId}`)
+      .send({name: 56454, password: 65465465, username: 654564})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(response.status).toEqual(400);
+  });
+
+  test("Deveria retornar um 500 ao tentar atualizar um usuário com dados inválidos", async () => {
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: dataUser.email, password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    const token = requestLogin.body.data.token;
+
+    const response = await request(app)
+      .put(`/users/${userId}`)
+      .send()
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(response.status).toEqual(400);
+  });
+
   test("Deveria retornar um 200 ao tentar atualizar um usuário existente", async () => {
     const requestLogin = await request(app)
       .post("/auth")
