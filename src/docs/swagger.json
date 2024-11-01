@@ -12,11 +12,11 @@
   ],
   "tags": [
     {
-      "name": "followers",
+      "name": "follower",
       "description": "Rota de seguidores"
     },
     {
-      "name": "likes",
+      "name": "like",
       "description": "Rotas de likes de tweets"
     },
     {
@@ -24,7 +24,7 @@
       "description": "Rotas de replies de tweets"
     },
     {
-      "name": "tweets",
+      "name": "tweet",
       "description": "Rotas dos tweets"
     },
     {
@@ -206,7 +206,7 @@
     "/users/:id": {
       "get": {
         "tags": ["users"],
-        "description": "Rota para listar um usuário usuando o seu id único de parâmetro",
+        "description": "Rota para listar um usuário usando o seu id único de parâmetro",
         "parameters": {
           "id": {
             "type": "string"
@@ -436,9 +436,9 @@
         ]
       }
     },
-    "/tweets": {
+    "/tweet": {
       "post": {
-        "tags": ["tweets"],
+        "tags": ["tweet"],
         "description": "Rota para criar um novo tweet",
         "parameters": {
           "authorization": {
@@ -547,7 +547,7 @@
         ]
       },
       "get": {
-        "tags": ["tweets"],
+        "tags": ["tweet"],
         "description": "Rota para listar todos os tweets",
         "responses": {
           "200": {
@@ -608,10 +608,10 @@
         ]
       }
     },
-    "/tweets/:userId": {
+    "/tweet/:userId": {
       "get": {
-        "tags": ["tweets"],
-        "description": "Rota para listar um tweet usuando o id único de parâmetro do usuários",
+        "tags": ["tweet"],
+        "description": "Rota para listar um tweet usando o id único de parâmetro do usuários",
         "parameters": {
           "userId": {
             "type": "string"
@@ -683,9 +683,9 @@
         ]
       }
     },
-    "/tweets/:id": {
+    "/tweet/:id": {
       "put": {
-        "tags": ["tweets"],
+        "tags": ["tweet"],
         "description": "Rota para atualizar um tweet através do parâmetro id",
         "parameters": {
           "id": {
@@ -773,7 +773,7 @@
         ]
       },
       "delete": {
-        "tags": ["tweets"],
+        "tags": ["tweet"],
         "description": "Rota para deletar um tweet através do seu id",
         "parameters": {
           "id": {
@@ -783,6 +783,313 @@
         "responses": {
           "200": {
             "description": "Tweet apagado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tweet não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro de comunicação com servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/like": {
+      "post": {
+        "tags": ["like"],
+        "description": "Rota para dar like em um tweet",
+        "parameters": {
+          "authorization": {
+            "type": "string"
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tweet curtido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tweet não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuário precisa estar logado para curtir um tweet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Tweet já foi curtido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "500": {
+            "description": "Erro de comunicação com servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": ["like"],
+        "description": "Rota para listar todos os likes",
+        "responses": {
+          "200": {
+            "description": "Likes listados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro de comunicação com servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/like/:id": {
+      "get": {
+        "tags": ["like"],
+        "description": "Rota para listar um like usando o id único",
+        "parameters": {
+          "userId": {
+            "type": "string"
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "like listado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Like não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro de comunicação com servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["like"],
+        "description": "Rota para deletar um like através do seu id",
+        "parameters": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "like apagado",
             "content": {
               "application/json": {
                 "schema": {
