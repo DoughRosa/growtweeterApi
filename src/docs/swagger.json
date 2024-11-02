@@ -355,7 +355,8 @@
               "type": "string"
             },
             "required": true,
-            "description": "O id do usuário"
+            "description": "O id do usuário",
+            "example": "e1d15dca-fe0c-453e-90eb-eda42ff8557b"
           }
         ],
         "responses": {
@@ -426,13 +427,20 @@
       "put": {
         "tags": ["users"],
         "description": "Rota para atualizar um usuário através do parâmetro id",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do usuário",
+            "example": "e1d15dca-fe0c-453e-90eb-eda42ff8557b"
           }
-        },
+        ],
         "requestBody": {
-          "description": "Payload para cadastrar um usuário",
+          "description": "Payload para atualizar um usuário",
           "content": {
             "application/json": {
               "schema": {
@@ -440,7 +448,7 @@
                 "properties": {
                   "password": {
                     "type": "string",
-                    "example": 123456
+                    "example": "123456"
                   },
                   "name": {
                     "type": "string",
@@ -538,11 +546,18 @@
       "delete": {
         "tags": ["users"],
         "description": "Rota para deletar um usuário através do seu id",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do usuário",
+            "example": "e1d15dca-fe0c-453e-90eb-eda42ff8557b"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Usuário apagado",
@@ -610,141 +625,129 @@
       "post": {
         "tags": ["tweet"],
         "description": "Rota para criar um novo tweet",
-        "parameters": {
-          "authorization": {
-            "type": "string"
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Tweet criado com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "msg": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Faltou criar o counteúdo do tweet",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "msg": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Usuário precisa estar logado para tweetar",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "msg": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Tweet não pôde ser criado",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "msg": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Erro de comunicação com servidor",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "msg": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
+        "parameters": [
           {
-            "bearerAuth": []
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do usuário",
+            "example": "e1d15dca-fe0c-453e-90eb-eda42ff8557b"
           }
-        ]
-      },
-      "get": {
-        "tags": ["tweet"],
-        "description": "Rota para listar todos os tweets",
-        "responses": {
-          "200": {
-            "description": "Tweets listados",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "msg": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "users": {
-                          "type": "object"
-                        },
-                        "likes": {
-                          "type": "array"
-                        },
-                        "replies": {
-                          "type": "array"
+        ],
+        "requestBody": {
+          "description": "Payload para criar um tweet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example": "Novo tweet"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "example": "e1d15dca-fe0c-453e-90eb-eda42ff8557b"
+                  },
+                  "tweetType": "Tweet"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Tweet criado com sucesso",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "msg": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "items": {
+                          "$ref": "#components/schemas/tweet"
                         }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Faltou criar o counteúdo do tweet",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "msg": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Usuário precisa estar logado para tweetar",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "msg": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Tweet não pôde ser criado",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "msg": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro de comunicação com servidor",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "msg": {
+                        "type": "string"
                       }
                     }
                   }
@@ -752,30 +755,73 @@
               }
             }
           },
-          "500": {
-            "description": "Erro de comunicação com servidor",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "msg": {
-                      "type": "string"
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        },
+        "get": {
+          "tags": ["tweet"],
+          "description": "Rota para listar todos os tweets",
+          "responses": {
+            "200": {
+              "description": "Tweets listados",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "msg": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "users": {
+                            "type": "object"
+                          },
+                          "likes": {
+                            "type": "array"
+                          },
+                          "replies": {
+                            "type": "array"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erro de comunicação com servidor",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "msg": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
               }
             }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+          },
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ]
+        }
       }
     },
     "/tweet/:userId": {
@@ -2055,126 +2101,126 @@
           }
         ]
       }
-    }
-  },
-  "components": {
-    "schemas": {
-      "user": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "token": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "username": {
-            "type": "string"
-          },
-          "tweets": {
-            "type": "array"
-          },
-          "likes": {
-            "type": "array"
-          },
-          "replies": {
-            "type": "array"
-          },
-          "followers": {
-            "type": "array"
-          },
-          "following": {
-            "type": "array"
-          }
-        }
-      },
-      "tweet": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "tweetType": {
-            "type": "enum"
-          },
-          "likes": {
-            "type": "array"
-          },
-          "replies": {
-            "type": "array"
-          }
-        }
-      },
-      "like": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "tweetId": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "integer"
-          }
-        }
-      },
-      "reply": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "tweetId": {
-            "type": "string"
-          }
-        }
-      },
-      "follower": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "followerId": {
-            "type": "string"
-          },
-          "followingId": {
-            "type": "string"
-          }
-        }
-      }
     },
-    "requestBodies": {},
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+    "components": {
+      "schemas": {
+        "user": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "token": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "username": {
+              "type": "string"
+            },
+            "tweets": {
+              "type": "array"
+            },
+            "likes": {
+              "type": "array"
+            },
+            "replies": {
+              "type": "array"
+            },
+            "followers": {
+              "type": "array"
+            },
+            "following": {
+              "type": "array"
+            }
+          }
+        },
+        "tweet": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "tweetType": {
+              "type": "enum"
+            },
+            "likes": {
+              "type": "array"
+            },
+            "replies": {
+              "type": "array"
+            }
+          }
+        },
+        "like": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "tweetId": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "integer"
+            }
+          }
+        },
+        "reply": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "tweetId": {
+              "type": "string"
+            }
+          }
+        },
+        "follower": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "followerId": {
+              "type": "string"
+            },
+            "followingId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "requestBodies": {},
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
       }
     }
   }
