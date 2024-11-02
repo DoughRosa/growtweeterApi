@@ -12,6 +12,7 @@ describe("Testes do user controller", () => {
   };
 
   let userId: string;
+  let token: string;
 
   const hash = generateHash(dataUser.password);
 
@@ -23,6 +24,14 @@ describe("Testes do user controller", () => {
       .set("Accept", "application/json");
 
     userId = user.body.data.id;
+
+    const requestLogin = await request(app)
+      .post("/auth")
+      .send({email: dataUser.email, password: hash})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json");
+
+    token = requestLogin.body.data.token;
   });
 
   afterAll(async () => {
@@ -58,14 +67,6 @@ describe("Testes do user controller", () => {
   });
 
   test("Deveria listar todos os usuários no método get do /users", async () => {
-    const requestLogin = await request(app)
-      .post("/auth")
-      .send({email: dataUser.email, password: hash})
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
-
-    const token = requestLogin.body.data.token;
-
     const response = await request(app)
       .get("/users")
       .set("Content-Type", "application/json")
@@ -76,14 +77,6 @@ describe("Testes do user controller", () => {
   });
 
   test("Deveria retornar um 500 ao buscar um usuário inválido", async () => {
-    const requestLogin = await request(app)
-      .post("/auth")
-      .send({email: dataUser.email, password: hash})
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
-
-    const token = requestLogin.body.data.token;
-
     const response = await request(app)
       .get(`/users/0fa82d40-bab7-4000-8f27-abd706cb24`)
       .set("Content-Type", "application/json")
@@ -94,14 +87,6 @@ describe("Testes do user controller", () => {
   });
 
   test("Deveria listar um usuário buscado pelo seu id único", async () => {
-    const requestLogin = await request(app)
-      .post("/auth")
-      .send({email: dataUser.email, password: hash})
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
-
-    const token = requestLogin.body.data.token;
-
     const response = await request(app)
       .get(`/users/${userId}`)
       .set("Content-Type", "application/json")
@@ -112,14 +97,6 @@ describe("Testes do user controller", () => {
   });
 
   test("Deveria retornar um 404 ao buscar um usuário por um id inexistente", async () => {
-    const requestLogin = await request(app)
-      .post("/auth")
-      .send({email: dataUser.email, password: hash})
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
-
-    const token = requestLogin.body.data.token;
-
     const response = await request(app)
       .get(`/users/0fa82d40-bab7-4000-8f27-abd706cb2415`)
       .set("Content-Type", "application/json")
@@ -130,14 +107,6 @@ describe("Testes do user controller", () => {
   });
 
   test("Deveria retornar um 404 ao tentar atualizar um usuário que não existe", async () => {
-    const requestLogin = await request(app)
-      .post("/auth")
-      .send({email: dataUser.email, password: hash})
-      .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
-
-    const token = requestLogin.body.data.token;
-
     const response = await request(app)
       .put(`/users/0fa82d40-bab7-4000-8f27-abd706cb2415`)
       .send({name: "aijdiosja", password: "aodjoisjd", username: "diaojsdiosj"})
@@ -148,15 +117,29 @@ describe("Testes do user controller", () => {
     expect(response.status).toEqual(404);
   });
 
-  test("Deveria retornar um 200 ao tentar atualizar um usuário existente", async () => {
-    const requestLogin = await request(app)
-      .post("/auth")
-      .send({email: dataUser.email, password: hash})
+  test("Deveria retornar um 400 ao tentar atualizar um usuário com dados insuficientes", async () => {
+    const response = await request(app)
+      .put(`/users/${userId}`)
+      .send()
       .set("Content-Type", "application/json")
-      .set("Accept", "application/json");
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
 
-    const token = requestLogin.body.data.token;
+    expect(response.status).toEqual(400);
+  });
 
+  test("Deveria retornar um 500 ao tentar atualizar um usuário com dados inválidos", async () => {
+    const response = await request(app)
+      .put(`/users/${userId}`)
+      .send({name: 56454, password: 65465465, username: 654564})
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `bearer ${token}`);
+
+    expect(response.status).toEqual(500);
+  });
+
+  test("Deveria retornar um 200 ao tentar atualizar um usuário existente", async () => {
     const response = await request(app)
       .put(`/users/${userId}`)
       .send({name: "aijdiosja", password: "aodjoisjd", username: "diaojsdiosj"})
