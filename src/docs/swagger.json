@@ -637,14 +637,6 @@
                   "content": {
                     "type": "string",
                     "example": "Novo tweet"
-                  },
-                  "userId": {
-                    "type": "string",
-                    "example": "f0010e8b-fe06-4c41-8df3-c7e45734fb3e"
-                  },
-                  "tweetType": {
-                    "type": "enum",
-                    "example": "Tweet"
                   }
                 }
               }
@@ -1095,9 +1087,20 @@
       "post": {
         "tags": ["like"],
         "description": "Rota para dar like em um tweet",
-        "parameters": {
-          "authorization": {
-            "type": "string"
+        "requestBody": {
+          "description": "Payload para criar um like",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tweetId": {
+                    "type": "string",
+                    "example": "6cb70f60-c5f6-465c-a0a9-25bf6f7cda31"
+                  }
+                }
+              }
+            }
           }
         },
         "responses": {
@@ -1220,7 +1223,8 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "array"
+                      "type": "array",
+                      "$ref": "#/components/schemas/like"
                     }
                   }
                 }
@@ -1257,11 +1261,18 @@
       "get": {
         "tags": ["like"],
         "description": "Rota para listar um like usando o id único",
-        "parameters": {
-          "userId": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do tweet",
+            "example": "6cb70f60-c5f6-465c-a0a9-25bf6f7cda31"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "like listado",
@@ -1277,7 +1288,8 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "$ref": "#/components/schemas/like"
                     }
                   }
                 }
@@ -1330,11 +1342,18 @@
       "delete": {
         "tags": ["like"],
         "description": "Rota para deletar um like através do seu id",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do like",
+            "example": "6cb70f60-c5f6-465c-a0a9-25bf6f7cda31"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "like apagado",
@@ -1402,9 +1421,20 @@
       "post": {
         "tags": ["follower"],
         "description": "Rota para seguir um usuário",
-        "parameters": {
-          "authorization": {
-            "type": "string"
+        "requestBody": {
+          "description": "Payload para seguir um usuário",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "example": "11ab7edf-7fee-4dd2-8f10-52c5ee90ba8b"
+                  }
+                }
+              }
+            }
           }
         },
         "responses": {
@@ -1422,7 +1452,13 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "followedId": {
+                          "type": "string",
+                          "example": "11ab7edf-7fee-4dd2-8f10-52c5ee90ba8b"
+                        }
+                      }
                     }
                   }
                 }
@@ -1544,7 +1580,8 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "array"
+                      "type": "array",
+                      "$ref": "#/components/schemas/follower"
                     }
                   }
                 }
@@ -1577,15 +1614,22 @@
         ]
       }
     },
-    "/follower/:id": {
+    "/follower/{id}": {
       "get": {
         "tags": ["follower"],
         "description": "Rota para listar um seguidor usando o id único",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do usuário",
+            "example": "09e2c922-45fe-4113-9c53-a55bee72edf6"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Seguidor listado",
@@ -1601,7 +1645,13 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "follower": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/follower"
+                        }
+                      }
                     }
                   }
                 }
@@ -1654,11 +1704,18 @@
       "delete": {
         "tags": ["follower"],
         "description": "Rota para deixar de seguir uma pessoa através do seu id",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do usuário",
+            "example": "09e2c922-45fe-4113-9c53-a55bee72edf6"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Deixou de seguir essa pessoa",
@@ -1726,9 +1783,24 @@
       "post": {
         "tags": ["replies"],
         "description": "Rota para criar um tweet do tipo resposta",
-        "parameters": {
-          "authorization": {
-            "type": "string"
+        "requestBody": {
+          "description": "Payload para criar uma resposta",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example": "Nova Resposta"
+                  },
+                  "tweetId": {
+                    "type": "string",
+                    "example": "6cb70f60-c5f6-465c-a0a9-25bf6f7cda31"
+                  }
+                }
+              }
+            }
           }
         },
         "responses": {
@@ -1746,7 +1818,13 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "reply": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/reply"
+                        }
+                      }
                     }
                   }
                 }
@@ -1852,7 +1930,7 @@
       },
       "get": {
         "tags": ["replies"],
-        "description": "Rota para listar todos os seguidores",
+        "description": "Rota para listar todos as respostas",
         "responses": {
           "200": {
             "description": "Respostas listadas",
@@ -1868,7 +1946,13 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "array"
+                      "type": "array",
+                      "properties": {
+                        "replies": {
+                          "type": "object",
+                          "$ref": "#/components/schemas/reply"
+                        }
+                      }
                     }
                   }
                 }
@@ -1901,15 +1985,22 @@
         ]
       }
     },
-    "/replies/:id": {
+    "/replies/{id}": {
       "get": {
         "tags": ["replies"],
         "description": "Rota para listar uma resposta usando o seu id único de parâmetro",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id da resposta",
+            "example": "3c2b9ad7-7e36-424b-9986-f40bdebb2eb9"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Resposta listada",
@@ -1925,7 +2016,8 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "$ref": "#/components/schemas/reply"
                     }
                   }
                 }
@@ -1978,9 +2070,32 @@
       "put": {
         "tags": ["replies"],
         "description": "Rota para atualizar uma resposta através do parâmetro id",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id da resposta",
+            "example": "3c2b9ad7-7e36-424b-9986-f40bdebb2eb9"
+          }
+        ],
+        "requestBody": {
+          "description": "Payload para atualizar uma resposta",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example": "Nova Resposta 2"
+                  }
+                }
+              }
+            }
           }
         },
         "responses": {
@@ -2066,11 +2181,18 @@
       "delete": {
         "tags": ["replies"],
         "description": "Rota para deletar uma resposta através do seu id",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id da resposta",
+            "example": "3c2b9ad7-7e36-424b-9986-f40bdebb2eb9"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Resposta apagada",
