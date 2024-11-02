@@ -30,13 +30,153 @@
     {
       "name": "users",
       "description": "Rotas de usuários"
+    },
+    {
+      "name": "auth",
+      "description": "Rota de login"
     }
   ],
   "paths": {
+    "/auth": {
+      "post": {
+        "tags": ["auth"],
+        "description": "Rota para realizar o login",
+        "requestBody": {
+          "description": "Paylod para efetuar o login",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "novo-usuario@teste.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário logado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Faltou preencher os campos obrigatórios de criação de usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Email ou senha inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro de comunicação com servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "post": {
         "tags": ["users"],
         "description": "Rota para criar um novo usuário",
+        "requestBody": {
+          "description": "Payload para cadastrar um usuário",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "novo-usuario@teste.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Novo usuário"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "NU"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Usuário criado com sucesso",
@@ -203,15 +343,21 @@
         ]
       }
     },
-    "/users/:id": {
+    "/users/{id}": {
       "get": {
         "tags": ["users"],
         "description": "Rota para listar um usuário usando o seu id único de parâmetro",
-        "parameters": {
-          "id": {
-            "type": "string"
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "O id do usuário"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Usuário listado",
@@ -283,6 +429,30 @@
         "parameters": {
           "id": {
             "type": "string"
+          }
+        },
+        "requestBody": {
+          "description": "Payload para cadastrar um usuário",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": 123456
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Novo usuário Att"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "NUA"
+                  }
+                }
+              }
+            }
           }
         },
         "responses": {
