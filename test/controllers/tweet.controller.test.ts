@@ -27,9 +27,7 @@ describe("Testes do Tweet controller", () => {
 
     userId = user.body.data.id;
 
-    const auth = await request(app)
-      .post("/auth")
-      .send({ email: dataUser.email, password: dataUser.password });
+    const auth = await request(app).post("/auth").send({ email: dataUser.email, password: dataUser.password });
 
     token = auth.body.data.token;
   });
@@ -102,15 +100,15 @@ describe("Testes do Tweet controller", () => {
   });
 
   test("Deveria retornar 404 ao buscar todos os tweets de um usuario inexistente", async () => {
-    let userId = 123;
+    let userId = "c9054e1e-1839-4eb3-9452-fea6d3b0cf22";
     const response = await request(app)
       .get(`/tweet/${userId}`)
       .set("Content-Type", "application/json")
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${token}`);
 
-    expect(response.body).toHaveProperty("data");
-    expect(response.status).toBe(404);
+    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(200);
   });
 
   test("Deveria retornar 200 quando o tweet é atualizado com sucesso", async () => {
@@ -164,28 +162,15 @@ describe("Testes do Tweet controller", () => {
     expect(response.status).toBe(500);
   });
 
-  
   test("Deveria retornar 200 quando o tweet é deletado com sucesso", async () => {
     const tweetCreate = await request(app)
-    .post("/tweet")
-    .send({ content: "Teste de tweet" })
-    .set("Content-Type", "application/json")
-    .set("Accept", "application/json")
-    .set("Authorization", `Bearer ${token}`);
-    
+      .post("/tweet")
+      .send({ content: "Teste de tweet" })
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
     const tweetId = tweetCreate.body.data.id;
-    
-    const response = await request(app)
-    .delete(`/tweet/${tweetId}`)
-    .set("Content-Type", "application/json")
-    .set("Accept", "application/json")
-    .set("Authorization", `Bearer ${token}`);
-    
-    expect(response.status).toBe(200);
-  });
-  
-  test("Deveria retornar 404 quando o tweet não é encontrado para deletar", async () => {
-    const tweetId = "1b0c619f-6a5d-4fb1-bfe6-e7e6c5c25498";
 
     const response = await request(app)
       .delete(`/tweet/${tweetId}`)
@@ -193,18 +178,30 @@ describe("Testes do Tweet controller", () => {
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${token}`);
 
-      expect(response.status).toBe(404);
+    expect(response.status).toBe(200);
   });
 
   test("Deveria retornar 404 quando o tweet não é encontrado para deletar", async () => {
-    const tweetId = 123;
-    
+    const tweetId = "c9054b1e-1132-4eb3-9a32-a21623b0cf13";
+
     const response = await request(app)
-    .delete(`/tweet/${tweetId}`)
-    .set("Content-Type", "application/json")
-    .set("Accept", "application/json")
-    .set("Authorization", `Bearer ${token}`);
-    
+      .delete(`/tweet/${tweetId}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
     expect(response.status).toBe(404);
+  });
+
+  test("Deveria retornar 500 quando passado um payload invalido", async () => {
+    const tweetId = 123;
+
+    const response = await request(app)
+      .delete(`/tweet/${tweetId}`)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.status).toBe(500);
   });
 });

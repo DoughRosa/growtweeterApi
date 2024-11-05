@@ -168,6 +168,8 @@ class TweetController {
         msg: "Tweet Not Found",
       });
     } catch (error) {
+      console.log("ERROR TWEET DELETE", error);
+
       return res.status(500).json({ success: false, msg: "ERROR DATABASE" });
     }
   }
