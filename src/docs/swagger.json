@@ -12,28 +12,29 @@
   ],
   "tags": [
     {
-      "name": "follower",
-      "description": "Rota de seguidores"
-    },
-    {
-      "name": "like",
-      "description": "Rotas de likes de tweets"
-    },
-    {
-      "name": "replies",
-      "description": "Rotas de replies de tweets"
-    },
-    {
-      "name": "tweet",
-      "description": "Rotas dos tweets"
+      "name": "auth",
+      "description": "Rota de login"
     },
     {
       "name": "users",
       "description": "Rotas de usuários"
     },
     {
-      "name": "auth",
-      "description": "Rota de login"
+      "name": "tweet",
+      "description": "Rotas dos tweets"
+    },
+    {
+      "name": "like",
+      "description": "Rotas de likes de tweets"
+    },
+    {
+      "name": "follower",
+      "description": "Rota de seguidores"
+    },
+
+    {
+      "name": "replies",
+      "description": "Rotas de replies de tweets"
     }
   ],
   "paths": {
@@ -1257,7 +1258,7 @@
         ]
       }
     },
-    "/like/:id": {
+    "/like/{id}": {
       "get": {
         "tags": ["like"],
         "description": "Rota para listar um like usando o id único",
