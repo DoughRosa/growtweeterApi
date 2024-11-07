@@ -62,6 +62,16 @@ class TweetController {
               username: true,
             },
           },
+          replies: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  username: true,
+                },
+              },
+            },
+          },
         },
       });
       return res.status(200).json({ success: true, msg: "Tweets Listed", data: tweets });
