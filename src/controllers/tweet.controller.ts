@@ -60,8 +60,6 @@ class TweetController {
             select: {
               name: true,
               username: true,
-            },
-            include: {
               followers: true,
               following: true,
             },
@@ -73,8 +71,6 @@ class TweetController {
                   id: true,
                   name: true,
                   username: true,
-                },
-                include: {
                   followers: true,
                   following: true,
                 },
