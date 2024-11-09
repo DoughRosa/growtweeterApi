@@ -58,6 +58,7 @@ class TweetController {
           likes: true,
           user: {
             select: {
+              id: true,
               name: true,
               username: true,
               followers: true,
