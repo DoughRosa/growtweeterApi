@@ -61,6 +61,10 @@ class TweetController {
               name: true,
               username: true,
             },
+            include: {
+              followers: true,
+              following: true,
+            },
           },
           replies: {
             include: {
@@ -69,6 +73,10 @@ class TweetController {
                   id: true,
                   name: true,
                   username: true,
+                },
+                include: {
+                  followers: true,
+                  following: true,
                 },
               },
             },
